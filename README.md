@@ -412,12 +412,21 @@ battery = battery icon=auto icon_color=0x7bd88fff text=on
 ```
 
 The `keyboard_layout` module reads HatWM's current XKB layout over its
-persistent IPC connection and displays a short language code such as `EN`,
-`GE`, `FR`, or `RU`. Click the module to send HatWM's
+persistent IPC connection. By default it displays the uppercase, two-character
+layout identifier (`us` becomes `US`). Add custom labels in a
+`[keyboard_layout_mappings]` section when the desired language label differs
+from the XKB identifier. Click the module to send HatWM's
 `toggle_keyboard_layout` IPC command and advance to the next layout configured
 by `keyboard_layouts` in HatWM:
 
 ```ini
+[keyboard_layout_mappings]
+us = EN
+ge = GE
+fr = FR
+ru = RU
+
+[right]
 keyboard = keyboard_layout icon=input-keyboard-symbolic icon_color=0x08bdbaff
 ```
 

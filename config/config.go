@@ -56,6 +56,7 @@ type Config struct {
 	VolumeSliderWidth           int
 	BrightnessSliderWidth       int
 	MicrophoneSliderWidth       int
+	KeyboardLayoutMappings      map[string]string
 	Left                        []Module
 	Center                      []Module
 	Right                       []Module
@@ -135,6 +136,12 @@ margin_left = 0
 #   name = tray
 # Supported clock tokens include %a %A %b %B %d %m %Y %H %I %M %S %p %z.
 
+# Optional display labels for XKB layout identifiers. Unmapped layouts use
+# their uppercase two-character identifier (for example, us becomes US).
+[keyboard_layout_mappings]
+# us = EN
+# ge = GE
+
 [left]
 launcher = launcher
 workspaces = workspaces
@@ -213,6 +220,7 @@ func defaultConfig() Config {
 		VolumeSliderWidth:           80,
 		BrightnessSliderWidth:       80,
 		MicrophoneSliderWidth:       80,
+		KeyboardLayoutMappings:      make(map[string]string),
 	}
 }
 
@@ -269,6 +277,12 @@ func LoadConfig() (Config, error) {
 		switch section {
 		case "settings":
 			parseSetting(&cfg, key, value)
+		case "keyboard_layout_mappings":
+			key = strings.ToLower(strings.TrimSpace(key))
+			value = strings.TrimSpace(unquoteValue(value))
+			if key != "" && value != "" {
+				cfg.KeyboardLayoutMappings[key] = value
+			}
 		case "left":
 			if m, ok := parseModule(key, value); ok {
 				cfg.Left = append(cfg.Left, m)

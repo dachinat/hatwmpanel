@@ -75,6 +75,37 @@ func TestLoadConfigCreatesDefault(t *testing.T) {
 	}
 }
 
+func TestLoadConfigParsesKeyboardLayoutMappings(t *testing.T) {
+	home := t.TempDir()
+	t.Setenv("HOME", home)
+	configDir := filepath.Join(home, ".config", "hatwmpanel")
+	if err := os.MkdirAll(configDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	contents := `[keyboard_layout_mappings]
+US = English
+ge = "ქართული"
+blank =
+`
+	if err := os.WriteFile(filepath.Join(configDir, "config"), []byte(contents), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	cfg, err := LoadConfig()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := cfg.KeyboardLayoutMappings["us"]; got != "English" {
+		t.Fatalf("US mapping = %q, want English", got)
+	}
+	if got := cfg.KeyboardLayoutMappings["ge"]; got != "ქართული" {
+		t.Fatalf("Georgian mapping = %q, want ქართული", got)
+	}
+	if _, ok := cfg.KeyboardLayoutMappings["blank"]; ok {
+		t.Fatal("blank mapping should be ignored")
+	}
+}
+
 func TestParseWorkspacesModule(t *testing.T) {
 	m, ok := parseModule("pager", "workspaces")
 	if !ok || m.Kind != "workspaces" {

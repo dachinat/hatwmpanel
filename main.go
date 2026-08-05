@@ -225,7 +225,8 @@ func run() error {
 				}
 				panel.SetWorkspaces(workspaceSnapshot)
 				panel.SetKeyboardLayout(
-					keyboardlayout.Code(workspaceSnapshot.KeyboardLayout))
+					keyboardlayout.Code(workspaceSnapshot.KeyboardLayout,
+						cfg.KeyboardLayoutMappings))
 				panel.SetVolume(volumeState)
 				panel.SetBrightness(brightnessPercent)
 				panel.SetMicrophone(microphoneState)
@@ -252,7 +253,8 @@ func run() error {
 			}
 			panel.SetWorkspaces(workspaceSnapshot)
 			panel.SetKeyboardLayout(
-				keyboardlayout.Code(workspaceSnapshot.KeyboardLayout))
+				keyboardlayout.Code(workspaceSnapshot.KeyboardLayout,
+					cfg.KeyboardLayoutMappings))
 		default:
 		}
 
@@ -481,7 +483,8 @@ func run() error {
 				}
 				panel.SetWorkspaces(workspaceSnapshot)
 				panel.SetKeyboardLayout(
-					keyboardlayout.Code(workspaceSnapshot.KeyboardLayout))
+					keyboardlayout.Code(workspaceSnapshot.KeyboardLayout,
+						cfg.KeyboardLayoutMappings))
 				panel.SetVolume(volumeState)
 				panel.SetBrightness(brightnessPercent)
 				panel.SetMicrophone(microphoneState)
