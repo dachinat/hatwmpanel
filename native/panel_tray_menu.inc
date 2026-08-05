@@ -161,12 +161,8 @@ int hatwm_panel_show_tray_menu(HatWMPanel *panel, const char *service, const cha
                          (int)panel->pointer_x);
     if (panel->panel_at_bottom) {
         gtk_layer_set_anchor(GTK_WINDOW(pending->anchor), GTK_LAYER_SHELL_EDGE_BOTTOM, TRUE);
-        gtk_layer_set_margin(GTK_WINDOW(pending->anchor), GTK_LAYER_SHELL_EDGE_BOTTOM,
-                             panel->height);
     } else {
         gtk_layer_set_anchor(GTK_WINDOW(pending->anchor), GTK_LAYER_SHELL_EDGE_TOP, TRUE);
-        gtk_layer_set_margin(GTK_WINDOW(pending->anchor), GTK_LAYER_SHELL_EDGE_TOP,
-                             panel->height);
     }
     gtk_widget_show(pending->anchor);
     gtk_menu_attach_to_widget(GTK_MENU(menu), pending->anchor, NULL);
@@ -183,4 +179,3 @@ typedef struct NetworkMenuChoice {
     char *ssid;
     int wired;
 } NetworkMenuChoice;
-

@@ -63,10 +63,8 @@ int hatwm_panel_show_calendar(HatWMPanel *panel) {
 
     if (panel->panel_at_bottom) {
         gtk_layer_set_anchor(GTK_WINDOW(window), GTK_LAYER_SHELL_EDGE_BOTTOM, TRUE);
-        gtk_layer_set_margin(GTK_WINDOW(window), GTK_LAYER_SHELL_EDGE_BOTTOM, panel->height);
     } else {
         gtk_layer_set_anchor(GTK_WINDOW(window), GTK_LAYER_SHELL_EDGE_TOP, TRUE);
-        gtk_layer_set_margin(GTK_WINDOW(window), GTK_LAYER_SHELL_EDGE_TOP, panel->height);
     }
 
     GtkWidget *calendar = gtk_calendar_new();
@@ -99,4 +97,3 @@ int hatwm_panel_show_calendar(HatWMPanel *panel) {
     gtk_widget_grab_focus(calendar);
     return 1;
 }
-

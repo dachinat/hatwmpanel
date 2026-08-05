@@ -118,13 +118,9 @@ int hatwm_panel_show_network_menu(HatWMPanel *panel) {
     if (panel->panel_at_bottom) {
         gtk_layer_set_anchor(GTK_WINDOW(pending->anchor),
                              GTK_LAYER_SHELL_EDGE_BOTTOM, TRUE);
-        gtk_layer_set_margin(GTK_WINDOW(pending->anchor),
-                             GTK_LAYER_SHELL_EDGE_BOTTOM, panel->height);
     } else {
         gtk_layer_set_anchor(GTK_WINDOW(pending->anchor),
                              GTK_LAYER_SHELL_EDGE_TOP, TRUE);
-        gtk_layer_set_margin(GTK_WINDOW(pending->anchor),
-                             GTK_LAYER_SHELL_EDGE_TOP, panel->height);
     }
 
     panel->network_menu = menu;
@@ -260,13 +256,9 @@ int hatwm_panel_show_bluetooth_menu(HatWMPanel *panel) {
     if (panel->panel_at_bottom) {
         gtk_layer_set_anchor(GTK_WINDOW(pending->anchor),
                              GTK_LAYER_SHELL_EDGE_BOTTOM, TRUE);
-        gtk_layer_set_margin(GTK_WINDOW(pending->anchor),
-                             GTK_LAYER_SHELL_EDGE_BOTTOM, panel->height);
     } else {
         gtk_layer_set_anchor(GTK_WINDOW(pending->anchor),
                              GTK_LAYER_SHELL_EDGE_TOP, TRUE);
-        gtk_layer_set_margin(GTK_WINDOW(pending->anchor),
-                             GTK_LAYER_SHELL_EDGE_TOP, panel->height);
     }
 
     panel->bluetooth_menu = menu;
@@ -279,4 +271,3 @@ int hatwm_panel_show_bluetooth_menu(HatWMPanel *panel) {
     pending->popup_source = g_timeout_add(20, popup_menu_when_ready, pending);
     return 1;
 }
-
