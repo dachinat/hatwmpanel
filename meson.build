@@ -69,7 +69,7 @@ hatwmpanel_sources = files(
     'native/launcher.go',
     'native/layout.go',
     'native/logo.go',
-    'native/logo.svg',
+    'native/logo.png',
     'native/microphone.go',
     'native/native.go',
     'native/network.go',

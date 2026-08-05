@@ -207,10 +207,8 @@ void hatwm_panel_set_ram(HatWMPanel *panel, const char *text);
 void hatwm_panel_set_cpu(HatWMPanel *panel, const char *text);
 void hatwm_panel_set_gpu(HatWMPanel *panel, const char *text);
 void hatwm_panel_set_netstat(HatWMPanel *panel, const char *text);
-void hatwm_panel_set_launcher_logo_svg(HatWMPanel *panel,
-                                       const uint8_t *data, int length,
-                                       uint32_t outline_color,
-                                       uint32_t fill_color);
+void hatwm_panel_set_launcher_logo_png(HatWMPanel *panel,
+                                       const uint8_t *data, int length);
 void hatwm_panel_set_workspaces(HatWMPanel *panel,
                                 const HatWMPanelWorkspace *workspaces, int workspace_count,
                                 const HatWMPanelWindow *windows, int window_count,

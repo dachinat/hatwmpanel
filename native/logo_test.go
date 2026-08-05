@@ -2,15 +2,20 @@ package native
 
 import (
 	"bytes"
+	"image/png"
 	"testing"
 )
 
-func TestLogoSVGIsBundled(t *testing.T) {
-	logo := LogoSVG()
+func TestLogoPNGIsBundledAtPanelSize(t *testing.T) {
+	logo := LogoPNG()
 	if len(logo) == 0 {
-		t.Fatal("launcher SVG is empty")
+		t.Fatal("launcher PNG is empty")
 	}
-	if !bytes.Contains(logo, []byte("<svg")) {
-		t.Fatal("launcher asset is not SVG markup")
+	config, err := png.DecodeConfig(bytes.NewReader(logo))
+	if err != nil {
+		t.Fatalf("decode launcher PNG: %v", err)
+	}
+	if config.Width != 32 || config.Height != 32 {
+		t.Fatalf("launcher PNG is %dx%d, want 32x32", config.Width, config.Height)
 	}
 }

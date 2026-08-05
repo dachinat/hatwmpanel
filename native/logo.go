@@ -2,11 +2,10 @@ package native
 
 import _ "embed"
 
-//go:embed logo.svg
-var logoSVG []byte
+//go:embed logo.png
+var logoPNG []byte
 
-// LogoSVG returns the bundled launcher artwork. Its color is applied by the
-// native renderer so it can follow the launcher's icon_color setting.
-func LogoSVG() []byte {
-	return logoSVG
+// LogoPNG returns the bundled launcher artwork at its native 32 px size.
+func LogoPNG() []byte {
+	return logoPNG
 }

@@ -88,11 +88,13 @@ func TestParseLauncherModule(t *testing.T) {
 		t.Fatalf("unexpected launcher module: %#v, ok=%v", m, ok)
 	}
 	m, ok = parseModule("menu",
-		"launcher icon=start-here-symbolic icon_color=0x78a9ffff fill_color=0x315b86ff")
+		"launcher icon=start-here-symbolic icon_color=0x78a9ffff")
 	if !ok || m.Icon != "start-here-symbolic" ||
-		!m.HasIconColor || m.IconColor != 0x78a9ffff ||
-		!m.HasFillColor || m.FillColor != 0x315b86ff {
+		!m.HasIconColor || m.IconColor != 0x78a9ffff {
 		t.Fatalf("unexpected custom launcher module: %#v, ok=%v", m, ok)
+	}
+	if _, ok := parseModule("menu", "launcher fill_color=0x315b86ff"); ok {
+		t.Fatal("launcher should reject removed fill_color option")
 	}
 	if _, ok := parseModule("menu", "launcher unexpected"); ok {
 		t.Fatal("launcher should reject unexpected options")

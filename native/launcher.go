@@ -8,17 +8,16 @@ import "C"
 
 import "unsafe"
 
-func (p *Panel) SetLauncherLogo(outlineColor, fillColor uint32) {
+func (p *Panel) SetLauncherLogo() {
 	if p == nil || p.ptr == nil {
 		return
 	}
-	data := LogoSVG()
+	data := LogoPNG()
 	if len(data) == 0 {
 		return
 	}
-	C.hatwm_panel_set_launcher_logo_svg(
-		p.ptr, (*C.uint8_t)(unsafe.Pointer(&data[0])), C.int(len(data)),
-		C.uint32_t(outlineColor), C.uint32_t(fillColor))
+	C.hatwm_panel_set_launcher_logo_png(
+		p.ptr, (*C.uint8_t)(unsafe.Pointer(&data[0])), C.int(len(data)))
 }
 
 func (p *Panel) TakeLauncherClick() bool {

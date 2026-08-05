@@ -112,7 +112,7 @@ margin_bottom = 0
 margin_left = 0
 
 # Module syntax:
-#   name = launcher [icon=auto|system-icon-name] [icon_color=RGBA] [fill_color=RGBA]
+#   name = launcher [icon=auto|system-icon-name] [icon_color=RGBA]
 #   name = separator width=PIXELS
 #   name = text any text
 #   name = clock [icon=name|none] [icon_color=RGBA] strftime-like-format
@@ -136,7 +136,7 @@ margin_left = 0
 # Supported clock tokens include %a %A %b %B %d %m %Y %H %I %M %S %p %z.
 
 [left]
-launcher = launcher icon_color=0x6aa9e9ff fill_color=0x315b86ff
+launcher = launcher
 workspaces = workspaces
 layout = layout_mode
 storage = storage path=/ icon=drive-harddisk-symbolic
@@ -888,13 +888,6 @@ func parseModule(name, spec string) (Module, bool) {
 				}
 				m.IconColor = color
 				m.HasIconColor = true
-			case "fill_color":
-				color, err := parseColor(keyValue[1])
-				if err != nil {
-					return Module{}, false
-				}
-				m.FillColor = color
-				m.HasFillColor = true
 			default:
 				return Module{}, false
 			}

@@ -19,82 +19,40 @@ void hatwm_panel_set_clock(HatWMPanel *panel, const char *text) {
     panel_draw(panel);
 }
 
-void hatwm_panel_set_launcher_logo_svg(HatWMPanel *panel,
-                                       const uint8_t *data, int length,
-                                       uint32_t outline_color,
-                                       uint32_t fill_color) {
+typedef struct LauncherPNGReader {
+    const uint8_t *data;
+    size_t length;
+    size_t offset;
+} LauncherPNGReader;
+
+static cairo_status_t read_launcher_png(
+        void *closure, unsigned char *target, unsigned int length) {
+    LauncherPNGReader *reader = closure;
+    if (!reader || !target || reader->offset > reader->length ||
+        length > reader->length - reader->offset)
+        return CAIRO_STATUS_READ_ERROR;
+    memcpy(target, reader->data + reader->offset, length);
+    reader->offset += length;
+    return CAIRO_STATUS_SUCCESS;
+}
+
+void hatwm_panel_set_launcher_logo_png(HatWMPanel *panel,
+                                       const uint8_t *data, int length) {
     if (!panel || !data || length <= 0 || length > 1024 * 1024) return;
 
-    GError *error = NULL;
-    RsvgHandle *handle = rsvg_handle_new_from_data(
-        data, (gsize)length, &error);
-    if (!handle) {
-        if (error) g_error_free(error);
-        return;
-    }
-
-    uint32_t outline_r = (outline_color >> 24) & 0xff;
-    uint32_t outline_g = (outline_color >> 16) & 0xff;
-    uint32_t outline_b = (outline_color >> 8) & 0xff;
-    uint32_t outline_a = outline_color & 0xff;
-    uint32_t fill_r = (fill_color >> 24) & 0xff;
-    uint32_t fill_g = (fill_color >> 16) & 0xff;
-    uint32_t fill_b = (fill_color >> 8) & 0xff;
-    uint32_t fill_a = fill_color & 0xff;
-#define SCALED_CHANNEL(channel, percent) \
-    (((channel) * (percent) / 100) > 255 ? 255 : \
-     ((channel) * (percent) / 100))
-    char css[2048];
-    int css_length = snprintf(
-        css, sizeof(css),
-        "#fill-start{stop-color:#%02x%02x%02x;stop-opacity:%.3f}"
-        "#fill-middle{stop-color:#%02x%02x%02x;stop-opacity:%.3f}"
-        "#fill-end{stop-color:#%02x%02x%02x;stop-opacity:%.3f}"
-        "#outline-start{stop-color:#%02x%02x%02x;stop-opacity:%.3f}"
-        "#outline-middle{stop-color:#%02x%02x%02x;stop-opacity:%.3f}"
-        "#outline-end{stop-color:#%02x%02x%02x;stop-opacity:%.3f}"
-        "#outline-glow{flood-color:#%02x%02x%02x;flood-opacity:%.3f}"
-        "#inner-highlight{stroke:#%02x%02x%02x;stroke-opacity:%.3f}",
-        SCALED_CHANNEL(fill_r, 125), SCALED_CHANNEL(fill_g, 125),
-        SCALED_CHANNEL(fill_b, 125), fill_a / 255.0,
-        fill_r, fill_g, fill_b, fill_a / 255.0,
-        SCALED_CHANNEL(fill_r, 75), SCALED_CHANNEL(fill_g, 75),
-        SCALED_CHANNEL(fill_b, 75), fill_a / 255.0,
-        SCALED_CHANNEL(outline_r, 120), SCALED_CHANNEL(outline_g, 120),
-        SCALED_CHANNEL(outline_b, 120), outline_a / 255.0,
-        outline_r, outline_g, outline_b, outline_a / 255.0,
-        SCALED_CHANNEL(outline_r, 110), SCALED_CHANNEL(outline_g, 110),
-        SCALED_CHANNEL(outline_b, 110), outline_a / 255.0,
-        outline_r, outline_g, outline_b, 0.38 * outline_a / 255.0,
-        SCALED_CHANNEL(outline_r, 140), SCALED_CHANNEL(outline_g, 140),
-        SCALED_CHANNEL(outline_b, 140), 0.72 * outline_a / 255.0);
-#undef SCALED_CHANNEL
-    if (css_length < 0 || css_length >= (int)sizeof(css) ||
-        !rsvg_handle_set_stylesheet(
-            handle, (const guint8 *)css, (gsize)css_length, &error)) {
-        g_object_unref(handle);
-        if (error) g_error_free(error);
-        return;
-    }
-
-    int size = panel->launcher_size;
-    cairo_surface_t *surface = cairo_image_surface_create(
-        CAIRO_FORMAT_ARGB32, size, size);
-    cairo_t *cr = cairo_create(surface);
-    cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
-    cairo_set_source_rgba(cr, 0, 0, 0, 0);
-    cairo_paint(cr);
-    cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
-    RsvgRectangle viewport = {0, 0, size, size};
-    if (!rsvg_handle_render_document(handle, cr, &viewport, &error)) {
-        cairo_destroy(cr);
+    LauncherPNGReader reader = {
+        .data = data,
+        .length = (size_t)length,
+        .offset = 0,
+    };
+    cairo_surface_t *surface = cairo_image_surface_create_from_png_stream(
+        read_launcher_png, &reader);
+    if (cairo_surface_status(surface) != CAIRO_STATUS_SUCCESS ||
+        cairo_image_surface_get_width(surface) <= 0 ||
+        cairo_image_surface_get_height(surface) <= 0) {
         cairo_surface_destroy(surface);
-        g_object_unref(handle);
-        if (error) g_error_free(error);
         return;
     }
-    cairo_destroy(cr);
-    g_object_unref(handle);
 
     if (panel->launcher_logo) cairo_surface_destroy(panel->launcher_logo);
     panel->launcher_logo = surface;

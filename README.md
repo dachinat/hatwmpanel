@@ -74,7 +74,7 @@ internal/
   system/                battery, display, processor, memory, and disk readers
 native/
   *.go                   rendering, module UI, and typed Go-to-C bridges
-  logo.svg               bundled launcher artwork
+  logo.png               bundled 32 px launcher artwork
   panel.h                public C API
   panel.c                native translation-unit index
   panel_*.inc            focused Wayland/Cairo/GTK implementation units
@@ -220,7 +220,7 @@ disable that effect.
 ### Module syntax
 
 ```ini
-name = launcher [icon=auto|system-icon-name] [icon_color=RGBA] [fill_color=RGBA]
+name = launcher [icon=auto|system-icon-name] [icon_color=RGBA]
 name = separator width=PIXELS
 name = workspaces
 name = tray
@@ -259,20 +259,18 @@ the default wired icon. `icon=none` disables both icons; either can then be
 enabled again with its specific option.
 
 Without an `icon` option, the `launcher` module displays
-`native/logo.svg`. Its outline gradient uses `icon_color`, or the
-global `module_icon_color` when no launcher color is configured. Its shaded
-body uses `fill_color` and defaults to the Midnight active-surface blue. Neither color is
-inferred from the panel background. Set a system icon name to replace the
-bundled SVG completely:
+`native/logo.png` exactly as authored, including its original colors and
+transparency. Set a system icon name to replace the bundled PNG completely:
 
 ```ini
 launcher = launcher icon=start-here-symbolic icon_color=0x78a9ffff
 ```
 
-`icon=auto` explicitly selects the bundled SVG. Regular system SVG icons
-retain their original artwork and colors. Icons whose names
-end in `-symbolic` use `module_icon_color`; setting `icon_color` explicitly
-tints any configured launcher icon.
+`icon=auto` explicitly selects the bundled PNG. The `icon_color` option applies
+only when the launcher uses a system icon. Regular system SVG icons retain
+their original artwork and colors; names ending in `-symbolic` use
+`module_icon_color`, while an explicit `icon_color` tints any configured
+system icon.
 
 Clicking the module opens a search popup directly beneath it. Results update
 while typing and use

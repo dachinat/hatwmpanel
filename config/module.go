@@ -13,8 +13,6 @@ type Module struct {
 	WiredIcon    string
 	IconColor    uint32
 	HasIconColor bool
-	FillColor    uint32
-	HasFillColor bool
 	Action       string
 	Step         int
 	Width        int

@@ -276,10 +276,6 @@ func NewPanel(cfg Config) (*Panel, error) {
 	if launcherCfg.HasIconColor {
 		launcherIconColor = launcherCfg.IconColor
 	}
-	launcherFillColor := uint32(0x315b86ff)
-	if launcherCfg.HasFillColor {
-		launcherFillColor = launcherCfg.FillColor
-	}
 	launcherIconTint := iconTintValue(launcherCfg, launcherCfg.Icon)
 	_, clockCfg, _ := clockModule(cfg)
 	clockIcon := C.CString(clockCfg.Icon)
@@ -525,7 +521,7 @@ func NewPanel(cfg Config) (*Panel, error) {
 	panel := &Panel{ptr: ptr}
 	panel.SetGroupOrders(cfg)
 	if launcherCfg.Icon == "" {
-		panel.SetLauncherLogo(launcherIconColor, launcherFillColor)
+		panel.SetLauncherLogo()
 	}
 	panel.SetSeparators(cfg)
 	panel.SetButtons(cfg, true)
